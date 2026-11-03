@@ -1,8 +1,13 @@
 # ADR-001: Windows stack, solution layout and Core contracts
 
-- Status: **Proposed** (draft by Claude via SYN; not reviewed, not compiled)
+- Status: **Proposed, revision 2** (draft by Claude via SYN; revision 1 reviewed and Windows-tested by Codex in PR #5 at fe0d6f8; revision 2 is UNCOMPILED)
 - Issue: #1. Evidence: PR #4 (`docs/validation/RENDERING-SPIKE.md`, Codex, draft/unmerged)
 - Owner: Claude (draft) · Reviewer/compiler: Codex · Neither assistant merges its own work.
+
+## Revision history
+
+- Rev 1: original draft. Codex compiled it (Release build with `-m:1 --disable-build-servers`, 35 tests passed, per PR #5) and left five review comments.
+- Rev 2: responds to those five comments by changing the session contract only (see "How the contracts meet..."). Input, notification, provider, storage and game contracts are unchanged.
 
 ## Context
 
@@ -64,25 +69,34 @@ src/GLauncher.App/                  WinUI 3 shell (#3 builds on this)
 
 No plugin framework. Interfaces exist only where two assistants need an agreed seam.
 
-## How the contracts meet issue #1's acceptance criteria
+## How the contracts meet issue #1's acceptance criteria (revision 2)
 
 - **Separate focus facts:** `LauncherFocusFacts` = launcher foreground, minimized, text-entry, tracked-game-focus, active session. `DefaultInputPolicy` derives navigation/shortcut/fullscreen/emergency decisions; F is denied when minimized, unfocused, or typing.
-- **Stable identity:** `SessionId` plus `ProcessIdentity(PID, creation time)`; bare PIDs are never identities.
-- **Launch / unknown / exit:** `SessionState` = Launching, Running, **TrackingUncertain**, Exited, LaunchFailed. A bootstrap exiting yields TrackingUncertain, not Exited. `SessionEndReason` records *why* it ended.
-- **Termination capability:** `TerminationCapability` (Supported/Partial/Unsupported) and `TerminateAsync(SessionId, trigger)` — the only call that ends a game, scoped to that session's processes, never "the foreground process".
-- **Disposal never kills:** `ObserveAsync` cancellation only stops observing; `LaunchAsync` cancellation only stops waiting. `LauncherExitPolicy` (LeaveGameRunning / AskUser / TerminateGame) makes launcher exit an explicit choice. The proposed default is **LeaveGameRunning**.
+- **Recoverable launch identity (review #1):** `LaunchRequest.SessionId` is caller-supplied and doubles as the idempotency key. The service registers the session (Launching, Revision 1) **before any native side effect**, so `GetSession`/`ObserveAsync`/`TerminateAsync` work even if the launch call is cancelled or its result lost.
+  - Same `SessionId` again: `ReplayedExisting`, nothing launched twice.
+  - Same game already possibly alive: default `DuplicateLaunchPolicy.RejectIfActive` returns `RejectedGameAlreadyActive` with the existing session and creates no new one; `AllowConcurrent` is opt-in.
+  - Token already cancelled on entry: `OperationCanceledException`, nothing registered. Cancelled after registration but before the process starts: no process, session becomes `LaunchFailed(CancelledBeforeStart)`. Cancelled after a process started: the game is never killed and the session stays tracked and queryable.
+- **Uncertain tracking can be resolved, non-destructively (review #2):** `StopTrackingAsync` moves a non-terminal session to the new terminal state `TrackingStopped` (`EndReason = TrackingDismissedByUser`) without touching any process. It is distinct from `Exited`, which now promises *observation*. `TrackingStopped` leaves `GetActiveSessions` and gameplay notification policy, and the UI must not say "game closed". `SessionStateResolver` keeps `Running` while any verified child is alive even if the root exited; with nothing alive it yields `Exited` only for `TrackingCoverage.Complete`, otherwise `TrackingUncertain`.
+- **Observation contract (review #3, `IAsyncEnumerable` kept):** atomic replay of the current snapshot first, then later changes; independent per-observer queues; strictly increasing `Revision` with gaps allowed under coalescing; a slow observer still gets the latest and the terminal snapshot; the stream completes after the terminal snapshot (terminal sessions replay it and complete); unknown id throws `KeyNotFoundException`; cancelling removes only that observer; snapshots are immutable (`ImmutableArray`).
+- **Termination coverage (review #4):** `Supported` now means *complete* verified coverage (invariant: Supported implies `TrackingCoverage.Complete`); `Partial` means verified-owned members can be terminated but the game may survive; `Unsupported` means do not offer it. `TerminationResult` adds `UnknownSurvivorsPossible` and `SkippedStale` (identities that failed revalidation at call time and were never signalled). Outcomes now include `KnownProcessesTerminated`. Only `ProvesGameEnded` (Terminated + no known survivors + no unknown survivors) may mark a session `Exited/TerminatedByLauncher`; an emptied known subset alone may not.
+- **Stable identity:** `SessionId` plus `ProcessIdentity(PID, creation time)`; bare PIDs are never identities, and identity is revalidated at the actual termination call.
+- **Exit policy (review #5):** `LauncherExitPolicy` default stays **LeaveGameRunning**. `TerminateGame` is implemented as explicit scoped `TerminateAsync` calls (trigger `LauncherExitPolicy`) before the launcher exits.
 - **Return to launcher:** with a live session and launcher focus, navigation is re-enabled (tested).
 - **Real vs demo:** `ProviderKind`, `DataProvenance`, `NotificationDecision.DemoLabelRequired`; `ProviderResult` never fabricates a value on NotConfigured/Cancelled/Failed.
 - **9:16:** `CoverSpec` is the single rule; `GeneratedCover` is held in a temp file and is not applied until accepted.
-- **Owned vs Discover:** separate types; `DiscoverRecommendation` has no play action and an explicit `OfferKind` (PaidPurchase / FreeDownload).
+- **Owned vs Discover:** separate types; `DiscoverRecommendation` has no play action and an explicit `OfferKind`.
 
 ## Adapter notes for #2 (Codex)
 
-- Do not set `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE` by default: closing the launcher's job handle would then kill the game, contradicting the disposal rule. Use it only if `LauncherExitPolicy.TerminateGame` is chosen.
-- Launchers may break away from jobs, so a Job Object is evidence, not proof: report `TrackingQuality` and `TerminationCapability` honestly (Microsoft's job-object reference documents breakaway behaviour).
-- The emergency binding is observed by the adapter; `IInputPolicy.EmergencyCloseArmed` only says when it may fire. It must resolve to `TerminateAsync(sessionId, …)` for a known session, never to a PID taken from the foreground window.
+- **Leave `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE` off** (accepting review #5). Releasing the last job handle, including on a launcher crash, must not end a game. A crash of the launcher therefore leaves the game running, which is the documented behaviour.
+- Job objects are evidence, not proof: launchers may break away. Report `TrackingQuality`, `TrackingCoverage` and `TerminationCapability` honestly. `Complete`/`Supported` should be rare and earned (e.g. a job that held, or a direct game executable with no handoff signature).
+- The emergency binding is observed by the adapter; `IInputPolicy.EmergencyCloseArmed` only says when it may fire. It must resolve to `TerminateAsync(sessionId, ...)` for a known session, never to a PID taken from the foreground window.
+- Publish a new immutable snapshot (Revision + 1) per state change; keep terminal snapshots for replay at least until launcher exit (the adapter may cap how many are retained).
+- Call `SessionStateResolver.Resolve` rather than re-deriving state rules per adapter.
 
 ## Unresolved (need SYN or evidence; deliberately not decided here)
+
+0. UI for `TrackingUncertain` (a "Is the game still running?" prompt with a Stop tracking action) belongs to #3; not designed here.
 
 1. Emergency binding default. Proposed: **Delete held ~1 s** because Delete is a real game/text key. SYN may prefer an instant press.
 2. Whether the emergency key may fire while a *different* app is focused (frozen game that lost focus). Currently: only while the game has focus, or optionally while the launcher is focused.
@@ -104,4 +118,4 @@ dotnet test  -c Release
 
 ## Not verified by this change
 
-Nothing here has been compiled or run. Test package versions (`Microsoft.NET.Test.Sdk 17.12.0`, `xunit 2.9.3`, `xunit.runner.visualstudio 3.0.0`) are from memory and may need bumping. Unit tests exercise pure policy logic with fixtures only; they are not evidence of real focus, hotkey, process or controller behaviour.
+Revision 2 has not been compiled or run. (Revision 1 was compiled and tested by Codex.) Test package versions (`Microsoft.NET.Test.Sdk 17.12.0`, `xunit 2.9.3`, `xunit.runner.visualstudio 3.0.0`) are from memory and may need bumping. Unit tests exercise pure policy logic with fixtures only; they are not evidence of real focus, hotkey, process or controller behaviour.

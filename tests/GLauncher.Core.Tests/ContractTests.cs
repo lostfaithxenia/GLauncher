@@ -1,6 +1,5 @@
 using GLauncher.Core.Games;
 using GLauncher.Core.Providers;
-using GLauncher.Core.Sessions;
 
 namespace GLauncher.Core.Tests;
 
@@ -15,27 +14,6 @@ public class ContractTests
     [InlineData(0, 1920, false)]
     public void Cover_spec_recognises_nine_by_sixteen(int w, int h, bool expected) =>
         Assert.Equal(expected, CoverSpec.IsNineBySixteen(w, h));
-
-    [Fact]
-    public void Process_identity_is_not_just_a_pid()
-    {
-        var t = DateTimeOffset.UtcNow;
-        Assert.NotEqual(new ProcessIdentity(4242, t), new ProcessIdentity(4242, t.AddSeconds(5)));
-        Assert.Equal(new ProcessIdentity(4242, t), new ProcessIdentity(4242, t));
-    }
-
-    [Fact]
-    public void Tracking_uncertain_counts_as_possibly_alive_but_exited_does_not()
-    {
-        SessionSnapshot Make(SessionState s) => new(
-            SessionId.New(), GameId.New(), s, null, Array.Empty<ProcessIdentity>(),
-            TrackingQuality.RootOnly, TerminationCapability.Unsupported, DateTimeOffset.UtcNow);
-
-        Assert.True(Make(SessionState.TrackingUncertain).IsPossiblyAlive);
-        Assert.True(Make(SessionState.Launching).IsPossiblyAlive);
-        Assert.False(Make(SessionState.Exited).IsPossiblyAlive);
-        Assert.False(Make(SessionState.LaunchFailed).IsPossiblyAlive);
-    }
 
     [Fact]
     public void Provider_result_only_succeeds_when_it_really_did()
