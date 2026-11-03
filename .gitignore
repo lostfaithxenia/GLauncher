@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+/artifacts/
+/.local/
+.env
+.env.*
+!.env.example
