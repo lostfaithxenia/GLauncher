@@ -1,0 +1,33 @@
+{
+  "archive": "glauncher-issue-1-rev2-claude.zip",
+  "archiveSha256": "3fa887e958dcebe8a8b1b4a13b814ebcadadef01c0f917a3072772d1b68680a8",
+  "base": "fe0d6f83f38778c6de2d8e781d3ff9aaa0203e04",
+  "sourceCommit": "06463865103f8c98973b1572ed43222aa9636679",
+  "codexCompileFixes": [],
+  "files": [
+    {
+      "path": "src/GLauncher.Core/Sessions/SessionModels.cs",
+      "sourceSha256": "d4312a879acce978031db6a3a9971ce53fabd290de49e8cc65075c33675bea90",
+      "publishedSha256": "d4312a879acce978031db6a3a9971ce53fabd290de49e8cc65075c33675bea90",
+      "unchanged": true
+    },
+    {
+      "path": "tests/GLauncher.Core.Tests/ContractTests.cs",
+      "sourceSha256": "493117229d83e67f0a9825bc7e30a280b72a2b0c328df4748bb11852f34805df",
+      "publishedSha256": "493117229d83e67f0a9825bc7e30a280b72a2b0c328df4748bb11852f34805df",
+      "unchanged": true
+    },
+    {
+      "path": "tests/GLauncher.Core.Tests/SessionContractTests.cs",
+      "sourceSha256": "5efbde0a2bca19bdf2a0ab2062e533aa6c7a3631733166bdfe62d3bca69dba08",
+      "publishedSha256": "5efbde0a2bca19bdf2a0ab2062e533aa6c7a3631733166bdfe62d3bca69dba08",
+      "unchanged": true
+    },
+    {
+      "path": "docs/adr/ADR-001-stack-and-core-contracts.md",
+      "sourceSha256": "c609bcfcb214075a549588df4d977fe70e9313af3faec4d3ca8885c7f27cc23a",
+      "publishedSha256": "c609bcfcb214075a549588df4d977fe70e9313af3faec4d3ca8885c7f27cc23a",
+      "unchanged": true
+    }
+  ]
+}
