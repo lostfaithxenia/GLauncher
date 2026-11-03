@@ -1,0 +1,98 @@
+{
+  "archive": "glauncher-issue-1-claude-draft.zip",
+  "archiveSha256": "333638290c234860bb31858eac305e26156da7ce0906aba4604ff12830087fdd",
+  "baseMain": "89fee3b2931456ee8f3b4266961f36c3eb103eb9",
+  "importCommit": "2a2b452000df6942828e1432de612d57717f7e47",
+  "originalFiles": [
+    {
+      "path": "build/GLauncher.Common.props",
+      "sourceSha256": "c2decd2c0de7f57b95c70f65e51a4a18c3985bf78c14deccc837d7fc27504c36",
+      "currentSha256": "c2decd2c0de7f57b95c70f65e51a4a18c3985bf78c14deccc837d7fc27504c36",
+      "unchanged": true
+    },
+    {
+      "path": "docs/adr/ADR-001-stack-and-core-contracts.md",
+      "sourceSha256": "48f47767c1b2ac369138b950e7145506e91e5d8622a5a6d2802885d09bfbf9cb",
+      "currentSha256": "48f47767c1b2ac369138b950e7145506e91e5d8622a5a6d2802885d09bfbf9cb",
+      "unchanged": true
+    },
+    {
+      "path": "README-FOR-CODEX.md",
+      "sourceSha256": "3c483df474d06a4898065f8ec62caa20fc2adcebbd44a0988f16dc83bf1da2ef",
+      "currentSha256": "3c483df474d06a4898065f8ec62caa20fc2adcebbd44a0988f16dc83bf1da2ef",
+      "unchanged": true
+    },
+    {
+      "path": "src/GLauncher.Core/Games/GameModels.cs",
+      "sourceSha256": "9f6963c42a8c6a96e3adfc38989e16154df767ff94629bcae92db8b2271ac313",
+      "currentSha256": "9f6963c42a8c6a96e3adfc38989e16154df767ff94629bcae92db8b2271ac313",
+      "unchanged": true
+    },
+    {
+      "path": "src/GLauncher.Core/GLauncher.Core.csproj",
+      "sourceSha256": "937f0d3c19f754fca6f8275de44d341884197365557a6d3426e9ec82fcb33045",
+      "currentSha256": "937f0d3c19f754fca6f8275de44d341884197365557a6d3426e9ec82fcb33045",
+      "unchanged": true
+    },
+    {
+      "path": "src/GLauncher.Core/Input/InputPolicy.cs",
+      "sourceSha256": "39093623c2d092158619b9ee989c8f704fba5f3076a231c07c21dc71189bc9b3",
+      "currentSha256": "39093623c2d092158619b9ee989c8f704fba5f3076a231c07c21dc71189bc9b3",
+      "unchanged": true
+    },
+    {
+      "path": "src/GLauncher.Core/Notifications/NotificationPolicy.cs",
+      "sourceSha256": "0d150d39023f6c45af84d4b84327851b7da4957c2f8e814f4967ad27d311b1b9",
+      "currentSha256": "0d150d39023f6c45af84d4b84327851b7da4957c2f8e814f4967ad27d311b1b9",
+      "unchanged": true
+    },
+    {
+      "path": "src/GLauncher.Core/Providers/ArtworkAndMetadata.cs",
+      "sourceSha256": "ae2764e02ef5fbaacddf2b9d4e0aa46162940a54a4afb75f3d0d76b121a6f79e",
+      "currentSha256": "ae2764e02ef5fbaacddf2b9d4e0aa46162940a54a4afb75f3d0d76b121a6f79e",
+      "unchanged": true
+    },
+    {
+      "path": "src/GLauncher.Core/Providers/ProviderModels.cs",
+      "sourceSha256": "064ee0e7d577224747011c0b5112dfe51ed08bbcd6162bf3fc9aae4f7be07efb",
+      "currentSha256": "064ee0e7d577224747011c0b5112dfe51ed08bbcd6162bf3fc9aae4f7be07efb",
+      "unchanged": true
+    },
+    {
+      "path": "src/GLauncher.Core/Sessions/SessionModels.cs",
+      "sourceSha256": "eefa8bd4684d7f4181a269a6eb8a36bffb94e750e304bba35f575ef9020a7ffe",
+      "currentSha256": "eefa8bd4684d7f4181a269a6eb8a36bffb94e750e304bba35f575ef9020a7ffe",
+      "unchanged": true
+    },
+    {
+      "path": "src/GLauncher.Core/Storage/IGameLibraryStore.cs",
+      "sourceSha256": "ac6ca14b34377b48f2566ce0d3af995f8e1d9b2c92fcbedd76ecf6bd0b9a7295",
+      "currentSha256": "ac6ca14b34377b48f2566ce0d3af995f8e1d9b2c92fcbedd76ecf6bd0b9a7295",
+      "unchanged": true
+    },
+    {
+      "path": "tests/GLauncher.Core.Tests/ContractTests.cs",
+      "sourceSha256": "f13497dd6ca42b53b982c9efc2760fe9c8e3055ca9e446b0ae22f20eb3e1c085",
+      "currentSha256": "f13497dd6ca42b53b982c9efc2760fe9c8e3055ca9e446b0ae22f20eb3e1c085",
+      "unchanged": true
+    },
+    {
+      "path": "tests/GLauncher.Core.Tests/GLauncher.Core.Tests.csproj",
+      "sourceSha256": "99107645304793cf3ec028855fd7bb2e306df367343085477979e9ccfa07ee4c",
+      "currentSha256": "99107645304793cf3ec028855fd7bb2e306df367343085477979e9ccfa07ee4c",
+      "unchanged": true
+    },
+    {
+      "path": "tests/GLauncher.Core.Tests/InputPolicyTests.cs",
+      "sourceSha256": "1261b821bf5c9cc418c25cfda55d9c23025fafd0a6df06cb2c835e053737d1ea",
+      "currentSha256": "1261b821bf5c9cc418c25cfda55d9c23025fafd0a6df06cb2c835e053737d1ea",
+      "unchanged": true
+    },
+    {
+      "path": "tests/GLauncher.Core.Tests/NotificationPolicyTests.cs",
+      "sourceSha256": "3233d37dc0ff9709d07a5db0613e30e1c1933c9d7b16d6374b9a10af1774f457",
+      "currentSha256": "3233d37dc0ff9709d07a5db0613e30e1c1933c9d7b16d6374b9a10af1774f457",
+      "unchanged": true
+    }
+  ]
+}

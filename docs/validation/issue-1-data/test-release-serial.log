@@ -1,0 +1,9 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  GLauncher.Core -> [worktree]\src\GLauncher.Core\bin\Release\net10.0\GLauncher.Core.dll
+  GLauncher.Core.Tests -> [worktree]\tests\GLauncher.Core.Tests\bin\Release\net10.0\GLauncher.Core.Tests.dll
+Test run for [worktree]\tests\GLauncher.Core.Tests\bin\Release\net10.0\GLauncher.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: [validation]\test-results\core-tests.trx
+
+Passed!  - Failed:     0, Passed:    35, Skipped:     0, Total:    35, Duration: 3 s - GLauncher.Core.Tests.dll (net10.0)
