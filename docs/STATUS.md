@@ -1,37 +1,37 @@
-# GLauncher current state
+# GLauncher status
 
-## Confirmed setup
+## Repository
 
-- Live repository: https://github.com/lostfaithxenia/GLauncher
-- SYN selected PUBLIC visibility after the earlier private request.
-- This is a fresh repository, not a reuse of an older launcher.
-- Initial AGENTS.md commit: 7946adb60fba6f4d7509ee2a894c8a2bfe5cd98e.
-- The current product brief and accepted concept are included in the setup commit.
-- Latest written requirements override older concept details: 9:16 covers and prominent profiles.
-- Codex has GitHub connector read/write permissions and can create file commits, issues, branches and PRs.
-- Git and .NET SDK 10.0.403 / WindowsDesktop runtime 10.0.14 are available locally.
-- Claude currently has no verified GitHub access or Windows execution environment. SYN relays its drafts.
+- https://github.com/lostfaithxenia/GLauncher — PUBLIC by SYN's explicit choice.
+- Kit, shared instructions and accepted concept are on main at 89fee3b2931456ee8f3b4266961f36c3eb103eb9.
+- This branch, codex/1-rendering-spike, contains disposable probe source and actual validation evidence. It is not the production skeleton.
 
-## Current work boundary
+## Tasks and ownership
 
-SYN authorized the initial kit commit and three planning/implementation issues:
-1. ADR-001, solution skeleton and UI-independent Core contracts — Claude drafts; Codex reviews/compiles.
-2. Windows game-session tracking and focus/input policy — Codex, dependent on the contracts.
-3. Library shell, 9:16 grid and one platform-cloud aura — Claude, dependent on the agreed shell/contracts.
+- [#1 Architecture/Core](https://github.com/lostfaithxenia/GLauncher/issues/1): Claude drafts through SYN; Codex reviews and compile-verifies.
+- [#2 Windows sessions/input](https://github.com/lostfaithxenia/GLauncher/issues/2): claimed by Codex; waits for #1 contracts.
+- [#3 Library/aura UI](https://github.com/lostfaithxenia/GLauncher/issues/3): Claude drafts after #1 establishes shell/contracts.
+- Codex's isolated #1 spike owns only spikes/ and validation/status evidence. It does not replace Claude's ADR/Core work.
+- After #1, #2 and #3 can proceed against agreed contracts; final integration links them, not a circular implementation dependency.
+- Neither assistant merges its own work. No feature PR has been merged.
 
-Codex is performing an isolated rendering spike for video playback/pause and aura behavior. It does not establish a production framework decision or a finished alpha.
+## Verified in the Windows spike
 
-Feature changes use PRs. Neither assistant merges its own work. Initial documentation publication is the specifically authorized setup step.
+- SDK 10.0.403 / runtime 10.0.14; GitHub connector commits/issues/branches work.
+- WPF and WinUI probes compile with zero warnings/errors.
+- Final WinUI run exited 0, with 55 samples and six passing observed pause/resume checks.
+- Cached WPF fallback exited 0 and passed equivalent observation checks.
+- [Detailed measurements, failures and limits](validation/RENDERING-SPIKE.md).
+- Recommended for Claude's ADR: .NET 10 + WinUI 3, UI-independent Core and proposed SQLite. This remains a recommendation, not a finalized production architecture.
+- GPU utilization was not measurable through available Windows counters.
+- WPF was visually inspected. WinUI inspection timed out waiting for new-app approval; it is not visually verified.
 
-## Not yet established
+## Access and next action
 
-- A production framework or final Core contracts.
-- A production application, installer or configured CI.
-- AI/metadata providers, online presence or universal achievement integration.
-- Verified download connectors.
-- Physical-controller / real-game coverage for GLauncher.
-- Rendering-spike results; those will be recorded with actual measurements.
+Codex can publish through the connected GitHub account, compile .NET and run Windows validation. The connector has no create-repository action; SYN created this repository. Authenticated CLI git push is not configured.
 
-## Next handoff
+Claude has not established GitHub/write or Windows execution access. SYN relays its drafts. A public URL does not itself grant tool capability or write permission.
 
-Claude should read the design image separately from the text prompt and provide reviewable ADR/Core draft files through SYN. Codex publishes and compile-checks them with attribution before dependent feature work.
+Next: Claude supplies ADR-001 and Core/skeleton draft files, based on current main. Codex reviews and compiles them before #2 feature implementation. There is no Core draft to validate yet.
+
+No production alpha, installer, provider integration, controller/game compatibility claim or download connector is established by this spike.
