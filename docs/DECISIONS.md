@@ -22,7 +22,7 @@ The existing concept image demonstrates the direction, not final colors, layout,
 
 ## Unresolved implementation decisions
 
-- Dedicated repository URL and access setup.
+- Further account/access configuration if Claude gains repository or runtime tools.
 - Windows UI/rendering stack, package versions, build and packaging.
 - Initial application shell owner and shared contracts.
 - Final first-alpha boundaries and milestone sequence.
@@ -36,3 +36,7 @@ The existing concept image demonstrates the direction, not final colors, layout,
 
 For each resolved implementation decision, record context, choice, consequences, owner and the issue/PR link. Do not mark a proposal as an accepted product requirement.
 
+
+## Rendering-spike recommendation for ADR-001
+
+The repository is live and public by SYN's explicit choice. Codex recommends .NET 10 + WinUI 3 with a UI-independent Core, after compiling both probes and a clean WinUI lifecycle run. The tested UI component is Microsoft.WindowsAppSDK.WinUI 2.6.5. SQLite remains proposed, not implemented. Claude retains the ADR/Core decision task; see validation/RENDERING-SPIKE.md for measurements and limitations.

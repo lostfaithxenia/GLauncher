@@ -1,0 +1,100 @@
+{
+  "sampleCount": 54,
+  "startupEvent": "startupContentRenderedMs",
+  "startupMs": 3620.4547,
+  "firstMediaReadySampleSeconds": 3.1191327,
+  "logicalProcessors": 12,
+  "mediaErrors": [],
+  "gpuUtilization": null,
+  "gpuNote": "Windows GPU Engine performance-counter object unavailable. Rendering tier is not a utilization measurement.",
+  "renderingTier": 2,
+  "checks": [
+    {
+      "name": "minimized: media position paused",
+      "observations": 8,
+      "result": "pass"
+    },
+    {
+      "name": "minimized: cloud animations stopped",
+      "observations": 8,
+      "result": "pass"
+    },
+    {
+      "name": "game-focus-fixture: media position paused",
+      "observations": 8,
+      "result": "pass"
+    },
+    {
+      "name": "game-focus-fixture: cloud animations stopped",
+      "observations": 8,
+      "result": "pass"
+    },
+    {
+      "name": "foreground: video and animation active",
+      "observations": 8,
+      "result": "pass"
+    },
+    {
+      "name": "return: video and animation resumed",
+      "observations": 8,
+      "result": "pass"
+    }
+  ],
+  "phases": [
+    {
+      "phase": "warming",
+      "sampleCount": 2,
+      "activeSamples": 2,
+      "medianWorkingSetMiB": 365.609375,
+      "medianPrivateMiB": 319.583984375,
+      "medianCpuMachinePercent": 15.487549745164772
+    },
+    {
+      "phase": "foreground",
+      "sampleCount": 8,
+      "activeSamples": 8,
+      "medianWorkingSetMiB": 367.904296875,
+      "medianPrivateMiB": 318.421875,
+      "medianCpuMachinePercent": 10.024650608976728
+    },
+    {
+      "phase": "minimized",
+      "sampleCount": 8,
+      "activeSamples": 0,
+      "medianWorkingSetMiB": 369.392578125,
+      "medianPrivateMiB": 304.044921875,
+      "medianCpuMachinePercent": 0.13081678821069825
+    },
+    {
+      "phase": "foreground-resumed",
+      "sampleCount": 8,
+      "activeSamples": 8,
+      "medianWorkingSetMiB": 385.064453125,
+      "medianPrivateMiB": 319.03125,
+      "medianCpuMachinePercent": 12.138386934521815
+    },
+    {
+      "phase": "game-focus-fixture",
+      "sampleCount": 8,
+      "activeSamples": 0,
+      "medianWorkingSetMiB": 358.9296875,
+      "medianPrivateMiB": 292.6796875,
+      "medianCpuMachinePercent": 1.3661492544185627
+    },
+    {
+      "phase": "return",
+      "sampleCount": 8,
+      "activeSamples": 8,
+      "medianWorkingSetMiB": 399.923828125,
+      "medianPrivateMiB": 324.955078125,
+      "medianCpuMachinePercent": 12.176864323616194
+    }
+  ],
+  "limitations": [
+    "One short run, not a statistical benchmark.",
+    "CPU normalized over reported logical processors; two transition samples excluded per phase.",
+    "Focus fixture is another window in this probe, not a real game or session-tracker test.",
+    "Media-position and animation-clock checks do not prove present rate or decoder shutdown.",
+    "No physical-controller or Core-contract coverage."
+  ]
+}
