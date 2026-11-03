@@ -1,0 +1,11 @@
+{
+  "source": "core-tests.trx",
+  "total": 35,
+  "executed": 35,
+  "passed": 35,
+  "failed": 0,
+  "error": 0,
+  "timeout": 0,
+  "aborted": 0,
+  "notExecuted": 0
+}

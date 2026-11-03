@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/GLauncher.Core/GLauncher.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/GLauncher.Core.Tests/GLauncher.Core.Tests.csproj" />
+  </Folder>
+</Solution>
