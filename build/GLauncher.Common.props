@@ -1,0 +1,11 @@
+<Project>
+  <!-- Imported explicitly by src/ and tests/ projects. Deliberately NOT a root Directory.Build.props,
+       so the disposable projects under spikes/ are unaffected. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>
