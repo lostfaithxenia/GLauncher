@@ -1,0 +1,13 @@
+name: Windows alpha
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - run: dotnet build -c Release -m:1 --disable-build-servers
+      - run: dotnet test -c Release -m:1 --disable-build-servers --no-build
+      # Interactive GUI checks run locally, not in a headless hosted runner.
