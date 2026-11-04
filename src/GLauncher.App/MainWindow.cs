@@ -57,6 +57,7 @@ internal sealed partial class MainWindow : Window
     private TextBox? librarySearch;
     private Action? warnUnsavedChanges;
     private ContentDialog? currentDialog;
+    private bool dialogReady;
     private GridView? libraryGrid;
 
     public MainWindow()
@@ -121,6 +122,7 @@ internal sealed partial class MainWindow : Window
         {
             closing = true; timer.Stop(); ClearCards();
             mediaElement.SetMediaPlayer(null); media.Dispose(); sessions.Dispose();
+            Application.Current.Exit();
         };
     }
 
@@ -428,9 +430,10 @@ internal sealed partial class MainWindow : Window
     private async Task<ContentDialogResult> ShowDialogAsync(ContentDialog dialog)
     {
         if (showingDialog) return ContentDialogResult.None;
-        showingDialog = true; currentDialog = dialog;
+        showingDialog = true; currentDialog = dialog; dialogReady = false;
+        dialog.Opened += (_, _) => dialogReady = true;
         try { return await dialog.ShowAsync(); }
-        finally { showingDialog = false; currentDialog = null; }
+        finally { showingDialog = false; currentDialog = null; dialogReady = false; }
     }
     private async Task AlertAsync(string title, string message)
     { if (closing || showingDialog) { SetStatus(message); return; } var dialog = Dialog(title); dialog.Content = Text(message, 15); dialog.CloseButtonText = "Okay"; await ShowDialogAsync(dialog); }

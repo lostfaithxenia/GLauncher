@@ -84,20 +84,21 @@ internal sealed partial class MainWindow
             }
             else Skip("foreground F fullscreen round trip");
             ShowGame(games[0]); await Task.Delay(300); await SnapshotAsync(Path.Combine(evidence, "03-game-page.png"));
-            Program.Trace("Opening game editor"); var editorTask = EditGameAsync(games[0]); await Task.Delay(300);
-            var editor = currentDialog ?? throw new InvalidOperationException("Game editor did not open.");
+            Program.Trace("Opening game editor"); var editorTask = EditGameAsync(games[0]);
+            var editor = await ReadyDialogAsync();
             var titleField = Descendants<TextBox>(editor).First(t => t.Header?.ToString() == "Game name");
             titleField.Text = "Edited fixture · Moonvale";
-            editor.Hide(); await Task.Delay(200);
+            await Task.Delay(150); editor.Hide();
+            for (int wait = 0; wait < 60 && showingDialog && !Descendants<InfoBar>(editor).Any(b => b.IsOpen); wait++) await Task.Delay(50);
             Check("dirty editor blocks Escape-style dismissal", showingDialog && Descendants<InfoBar>(editor).Any(b => b.IsOpen));
             InvokeDialogButton(editor, "Save game"); await editorTask.WaitAsync(TimeSpan.FromSeconds(10));
             var edited = await new GLauncher.Storage.Sqlite.SqliteLibraryStore(Path.Combine(Program.DataDirectory, "library.db")).GetAsync(games[0].Id, default);
             Check("game editor saves and imports cover", edited?.Title == "Edited fixture · Moonvale" && edited.CoverPath!.StartsWith(Program.DataDirectory) && File.Exists(edited.CoverPath));
-            var discardTask = EditGameAsync(edited); await Task.Delay(200); editor = currentDialog!;
+            var discardTask = EditGameAsync(edited); editor = await ReadyDialogAsync();
             Descendants<TextBox>(editor).First(t => t.Header?.ToString() == "Game name").Text = "Discard this title";
             InvokeDialogButton(editor, "Discard changes"); await discardTask.WaitAsync(TimeSpan.FromSeconds(10));
             Check("explicit discard preserves saved entry", (await store.GetAsync(games[0].Id, default)) == edited);
-            var profileTask = EditProfileAsync(); await Task.Delay(200); var profile = currentDialog!;
+            var profileTask = EditProfileAsync(); var profile = await ReadyDialogAsync();
             Descendants<TextBox>(profile).First(t => t.Header?.ToString() == "Display name").Text = "SYN fixture profile";
             InvokeDialogButton(profile, "Save profile"); await profileTask.WaitAsync(TimeSpan.FromSeconds(10));
             Check("profile editor saves", (await store.GetPreferenceAsync<UserSettings>("settings"))!.ProfileName == "SYN fixture profile");
@@ -132,7 +133,7 @@ internal sealed partial class MainWindow
             await sessions.StopTrackingAsync(request.SessionId, default);
             Check("tracking dismissal removes gameplay policy", sessions.GetActiveSessions().Count == 0);
             ShowSettings(); await Task.Delay(300); await SnapshotAsync(Path.Combine(evidence, "05-settings.png"));
-            var exitTask = ConfirmExitAsync(); await Task.Delay(200);
+            var exitTask = ConfirmExitAsync(); await ReadyDialogAsync();
             Check("exit confirmation opens", currentDialog?.Title?.ToString() == "Ready to leave?");
             InvokeDialogButton(currentDialog!, "Stay here"); await exitTask.WaitAsync(TimeSpan.FromSeconds(10));
             Check("cancelled exit keeps app open", !allowClose && !closing);
@@ -164,6 +165,11 @@ internal sealed partial class MainWindow
             var child = VisualTreeHelper.GetChild(parent, i); if (child is T found) yield return found;
             foreach (var descendant in Descendants<T>(child)) yield return descendant;
         }
+    }
+    private async Task<ContentDialog> ReadyDialogAsync()
+    {
+        for (int wait = 0; wait < 100 && (!dialogReady || currentDialog is null); wait++) await Task.Delay(50);
+        return dialogReady && currentDialog is { } ready ? ready : throw new TimeoutException("ContentDialog.Opened was not delivered in five seconds.");
     }
     private static void InvokeDialogButton(ContentDialog dialog, string text)
     {
