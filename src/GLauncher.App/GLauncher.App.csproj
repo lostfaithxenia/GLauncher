@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../build/GLauncher.Common.props" />
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI><WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained><EnableMsixTooling>false</EnableMsixTooling>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks><ApplicationManifest>app.manifest</ApplicationManifest>
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+    <AssemblyName>GLauncher</AssemblyName><Version>0.1.0-alpha.1</Version>
+    <Description>GLauncher — local Windows alpha</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.6.5" />
+    <ProjectReference Include="../GLauncher.Windows/GLauncher.Windows.csproj" />
+    <ProjectReference Include="../GLauncher.Storage.Sqlite/GLauncher.Storage.Sqlite.csproj" />
+    <Content Include="Assets/**"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory></Content>
+  </ItemGroup>
+  <!-- The UI-only SDK build currently omits these two generated resources from dotnet publish.
+       A shell can render without them, but opening a ContentDialog then fails natively. -->
+  <Target Name="IncludeCompiledXamlInPublish" AfterTargets="ComputeFilesToPublish">
+    <Error Condition="!Exists('$(TargetDir)App.xbf') Or !Exists('$(TargetDir)$(AssemblyName).pri')" Text="Required compiled XAML resources are missing from the build output." />
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(TargetDir)App.xbf" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>App.xbf</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+      <ResolvedFileToPublish Include="$(TargetDir)$(AssemblyName).pri" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>$(AssemblyName).pri</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+</Project>

@@ -1,0 +1,10 @@
+Test run for <repo>\tests\GLauncher.Core.Tests\bin\Release\net10.0\GLauncher.Core.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: <workspace>\work\glauncher\alpha-validation\final-tests-2\alpha_net10.0_20261103213405.trx
+
+Passed!  - Failed:     0, Passed:    57, Skipped:     0, Total:    57, Duration: 58 ms - GLauncher.Core.Tests.dll (net10.0)
+Test run for <repo>\tests\GLauncher.Windows.Tests\bin\Release\net10.0-windows\GLauncher.Windows.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+Results File: <workspace>\work\glauncher\alpha-validation\final-tests-2\alpha_net10.0_20261103213410.trx
+
+Passed!  - Failed:     0, Passed:    14, Skipped:     0, Total:    14, Duration: 2 s - GLauncher.Windows.Tests.dll (net10.0)

@@ -1,8 +1,13 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/GLauncher.App/GLauncher.App.csproj" />
     <Project Path="src/GLauncher.Core/GLauncher.Core.csproj" />
+    <Project Path="src/GLauncher.Storage.Sqlite/GLauncher.Storage.Sqlite.csproj" />
+    <Project Path="src/GLauncher.Windows/GLauncher.Windows.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/GLauncher.Core.Tests/GLauncher.Core.Tests.csproj" />
+    <Project Path="tests/GLauncher.LaunchFixture/GLauncher.LaunchFixture.csproj" />
+    <Project Path="tests/GLauncher.Windows.Tests/GLauncher.Windows.Tests.csproj" />
   </Folder>
 </Solution>

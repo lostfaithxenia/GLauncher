@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../build/GLauncher.Common.props" />
+  <ItemGroup>
+    <ProjectReference Include="../GLauncher.Core/GLauncher.Core.csproj" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.13" />
+  </ItemGroup>
+</Project>

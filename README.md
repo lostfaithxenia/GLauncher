@@ -8,7 +8,9 @@ SYN explicitly selected public visibility for this repository. This is a new pro
 
 ## Current stage
 
-Product definition and architecture validation. The documentation kit and accepted energy-cloud concept are the starting point, not a completed application.
+First local Windows alpha on the `codex/2-first-alpha` branch. The WinUI app integrates Claude's reviewed revision-2 Core with Codex's Windows session/input adapter, SQLite library, generated artwork, game pages and editors. PR #6 depends on unmerged PR #5; neither assistant has merged its own work.
+
+- [Alpha usage, build and limitations](docs/ALPHA.md)
 
 - [Product brief](docs/PRODUCT_BRIEF.md)
 - [Current status](docs/STATUS.md)
@@ -29,4 +31,12 @@ The initial kit commit is authorized setup. Feature changes use issues and PRs; 
 
 ## Build
 
-The production stack is not locked. A rendering spike will validate video/aura behavior and record measurements before the first application skeleton is finalized.
+Windows x64 with .NET 10 SDK:
+
+```powershell
+dotnet build -c Release -m:1 --disable-build-servers
+dotnet test -c Release -m:1 --disable-build-servers
+./build/Publish-Alpha.ps1
+```
+
+The published folder includes GLauncher.exe and its runtimes; keep the folder intact. Normal libraries start empty. Automated UI/process fixtures are separate and labelled.

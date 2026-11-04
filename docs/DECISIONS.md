@@ -36,3 +36,13 @@ The existing concept image demonstrates the direction, not final colors, layout,
 
 For each resolved implementation decision, record context, choice, consequences, owner and the issue/PR link. Do not mark a proposal as an accepted product requirement.
 
+## First alpha implementation record (Codex, PR #6)
+
+- PUBLIC repository lostfaithxenia/GLauncher was explicitly selected by SYN. Earlier setup items above are historical.
+- Dependent base: Claude's revision-2 Core in PR #5, head 5deb77210a608efcaa788d09ef88dfc902f3726b; unchanged by this implementation.
+- Windows x64 WinUI with .NET 10, Microsoft.WindowsAppSDK.WinUI 2.6.5, local Microsoft.Data.Sqlite 10.0.13. UI/Win32/SQLite remain outside Core. Portable self-contained folder distribution; no merge or installer-signing claim.
+- Codex owns Windows adapters and the first UI integration. Baseline is local EXE library, owned recommendations, game pages/editors, local profile/roles, appearance settings and launch/return behavior. Provider-dependent features remain visibly unconfigured.
+- Generic launches explicitly initialize Incomplete coverage and Unsupported termination before start; verified process membership permits Partial termination. A native job alone does not prove that an external store did not receive an IPC handoff. All session IDs and terminal snapshots are retained through service exit.
+- SQLite initializes away from the UI thread in the unpackaged app. Custom main installs the WinUI dispatcher synchronization context. Neither observation disposal nor launcher closure kills a game; job kill-on-close is never enabled.
+- Normal foreground shortcuts and XInput navigation use actual foreground/minimized facts. The default emergency proposal is one-second Delete hold while a verified game member is foreground, disabled under unrelated apps; these product defaults remain unresolved.
+

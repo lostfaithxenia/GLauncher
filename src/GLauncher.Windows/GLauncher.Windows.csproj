@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../build/GLauncher.Common.props" />
+  <PropertyGroup><TargetFramework>net10.0-windows</TargetFramework><AllowUnsafeBlocks>true</AllowUnsafeBlocks></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../GLauncher.Core/GLauncher.Core.csproj" /></ItemGroup>
+</Project>

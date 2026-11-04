@@ -1,0 +1,15 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  GLauncher.Core -> <repo>\src\GLauncher.Core\bin\Release\net10.0\GLauncher.Core.dll
+  GLauncher.Windows -> <repo>\src\GLauncher.Windows\bin\Release\net10.0-windows\GLauncher.Windows.dll
+  GLauncher.Storage.Sqlite -> <repo>\src\GLauncher.Storage.Sqlite\bin\Release\net10.0\GLauncher.Storage.Sqlite.dll
+  GLauncher.App -> <repo>\src\GLauncher.App\bin\Release\net10.0-windows10.0.19041.0\win-x64\GLauncher.dll
+  GLauncher.Core.Tests -> <repo>\tests\GLauncher.Core.Tests\bin\Release\net10.0\GLauncher.Core.Tests.dll
+  GLauncher.LaunchFixture -> <repo>\tests\GLauncher.LaunchFixture\bin\Release\net10.0-windows\GLauncher.LaunchFixture.dll
+  GLauncher.Windows.Tests -> <repo>\tests\GLauncher.Windows.Tests\bin\Release\net10.0-windows\GLauncher.Windows.Tests.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:17.02
