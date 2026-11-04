@@ -68,7 +68,9 @@ internal sealed partial class MainWindow
             Check("GridView virtualizes 200 fixture entries", cardVisuals.Count > 0 && cardVisuals.Count < 100, new { realized = cardVisuals.Count, items = libraryGrid.Items.Count });
             libraryGrid.ItemsSource = library.Select(g => new CardViewModel(g)).ToArray(); await Task.Delay(250);
             librarySearch!.Focus(FocusState.Programmatic); librarySearch.Text = "Moonvale"; await Task.Delay(150);
-            Check("search filters library", libraryGrid?.Items.Count == 1);
+            // TextChanged and item-source replacement are dispatcher work; layout/resize can delay delivery.
+            for (int wait = 0; wait < 60 && libraryGrid?.Items.Count != 1; wait++) await Task.Delay(50);
+            Check("search filters library", libraryGrid?.Items.Count == 1, new { query = librarySearch.Text, items = libraryGrid?.Items.Count });
             var presenter = AppWindow.Presenter.Kind;
             if (DesktopInput.IsForeground(hwnd)) Check("F ignored while typing", !await ShortcutAsync(VirtualKey.F) && AppWindow.Presenter.Kind == presenter, new { Typing });
             else { Skip("F while typing in foreground"); Check("F ignored outside foreground", !await ShortcutAsync(VirtualKey.F) && AppWindow.Presenter.Kind == presenter); }
