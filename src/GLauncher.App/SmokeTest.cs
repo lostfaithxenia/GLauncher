@@ -26,7 +26,7 @@ internal sealed partial class MainWindow
         bool passed = false;
         void Skip(string name) => checks.Add(new { name, skipped = true, reason = "Windows did not grant this automated launch foreground focus. No foreground behavior is inferred." });
         void Check(string name, bool condition, object? facts = null)
-        { checks.Add(new { name, passed = condition, facts }); if (!condition) throw new InvalidOperationException("Smoke check failed: " + name); }
+        { checks.Add(new { name, passed = condition, facts }); Program.Trace("Check: " + name + " = " + condition); if (!condition) throw new InvalidOperationException("Smoke check failed: " + name); }
         try
         {
             Check("isolated explicit data directory", Program.Option("--data-directory") is not null && library.Count == 0);
@@ -82,7 +82,7 @@ internal sealed partial class MainWindow
             }
             else Skip("foreground F fullscreen round trip");
             ShowGame(games[0]); await Task.Delay(300); await SnapshotAsync(Path.Combine(evidence, "03-game-page.png"));
-            var editorTask = EditGameAsync(games[0]); await Task.Delay(300);
+            Program.Trace("Opening game editor"); var editorTask = EditGameAsync(games[0]); await Task.Delay(300);
             var editor = currentDialog ?? throw new InvalidOperationException("Game editor did not open.");
             var titleField = Descendants<TextBox>(editor).First(t => t.Header?.ToString() == "Game name");
             titleField.Text = "Edited fixture · Moonvale";

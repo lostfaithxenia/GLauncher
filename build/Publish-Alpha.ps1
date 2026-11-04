@@ -8,5 +8,8 @@ if (Test-Path -LiteralPath $glauncherDestination) {
 }
 & dotnet publish (Join-Path $glauncherRoot 'src/GLauncher.App/GLauncher.App.csproj') -c Release -r win-x64 --self-contained true -p:PublishTrimmed=false -m:1 --disable-build-servers -o $glauncherDestination
 if ($LASTEXITCODE -ne 0) { throw "Publish failed: $LASTEXITCODE" }
+foreach ($glauncherRequired in @('GLauncher.exe','App.xbf','GLauncher.pri','coreclr.dll','Microsoft.UI.Xaml.dll','Assets/icons.png','Assets/opening.mp4')) {
+    if (!(Test-Path -LiteralPath (Join-Path $glauncherDestination $glauncherRequired))) { throw "Published app is incomplete: $glauncherRequired" }
+}
 Copy-Item -LiteralPath (Join-Path $glauncherRoot 'docs/ALPHA.md') -Destination (Join-Path $glauncherDestination 'README.md')
 Write-Output "Portable app: $glauncherDestination"

@@ -18,4 +18,15 @@
     <ProjectReference Include="../GLauncher.Storage.Sqlite/GLauncher.Storage.Sqlite.csproj" />
     <Content Include="Assets/**"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory></Content>
   </ItemGroup>
+  <!-- The UI-only SDK build currently omits these two generated resources from dotnet publish.
+       A shell can render without them, but opening a ContentDialog then fails natively. -->
+  <Target Name="IncludeCompiledXamlInPublish" AfterTargets="ComputeFilesToPublish">
+    <Error Condition="!Exists('$(TargetDir)App.xbf') Or !Exists('$(TargetDir)$(AssemblyName).pri')" Text="Required compiled XAML resources are missing from the build output." />
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(TargetDir)App.xbf;$(TargetDir)$(AssemblyName).pri" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(Filename)%(Extension)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
 </Project>

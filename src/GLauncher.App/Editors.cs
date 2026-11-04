@@ -30,7 +30,9 @@ internal sealed partial class MainWindow
 
     private async Task EditGameAsync(GameEntry? original)
     {
+        if (Program.Option("--smoke-test") is not null) Program.Trace("Editor: constructing dialog");
         var dialog = Dialog(original is null ? "Add a world" : "Edit game");
+        if (Program.Option("--smoke-test") is not null) Program.Trace("Editor: constructing fields");
         dialog.PrimaryButtonText = "Save game"; dialog.SecondaryButtonText = "Discard changes"; dialog.CloseButtonText = "Cancel";
         var fields = new StackPanel { Spacing = 12, Width = 520 };
         var title = Field("Game name", original?.Title);
@@ -41,7 +43,9 @@ internal sealed partial class MainWindow
         var working = Field("Working folder (optional)", original?.Launch.WorkingDirectory);
         var cover = Field("Cover image — framed at 9:16", original?.CoverPath);
         var description = Field("Description", original?.Description, true);
+        if (Program.Option("--smoke-test") is not null) Program.Trace("Editor: constructing warning");
         var error = new InfoBar { IsOpen = false, IsClosable = false, Severity = InfoBarSeverity.Warning };
+        if (Program.Option("--smoke-test") is not null) Program.Trace("Editor: adding fields");
         fields.Children.Add(title); fields.Children.Add(platform); fields.Children.Add(executable);
         fields.Children.Add(Button("Choose executable", 9, async () =>
         {
@@ -76,6 +80,7 @@ internal sealed partial class MainWindow
             catch (Exception exception) { args.Cancel = true; saved = null; error.Message = exception.Message; error.IsOpen = true; }
             finally { deferral.Complete(); }
         };
+        if (Program.Option("--smoke-test") is not null) Program.Trace("Editor: showing dialog");
         try { await ShowDialogAsync(dialog); } finally { warnUnsavedChanges = null; }
         if (saved is not null) { library = await store.GetAllAsync(default); ShowGame(saved); SetStatus("Game saved."); }
     }

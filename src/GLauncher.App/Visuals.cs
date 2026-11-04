@@ -80,6 +80,8 @@ internal sealed class EnergyAura
     public void Clear()
     {
         SetActive(false, 0, 1); ElementCompositionPreview.SetElementChildVisual(host, null);
-        foreach (var puff in puffs) puff.Dispose(); puffs.Clear(); layer?.Dispose(); layer = null;
+        // Close() on a visual can invalidate a pending compositor frame during recycling/navigation.
+        // Detach the graph, then release managed references; COM retains any in-flight frame safely.
+        layer?.Children.RemoveAll(); puffs.Clear(); layer = null;
     }
 }
