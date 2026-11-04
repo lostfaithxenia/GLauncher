@@ -23,8 +23,12 @@
   <Target Name="IncludeCompiledXamlInPublish" AfterTargets="ComputeFilesToPublish">
     <Error Condition="!Exists('$(TargetDir)App.xbf') Or !Exists('$(TargetDir)$(AssemblyName).pri')" Text="Required compiled XAML resources are missing from the build output." />
     <ItemGroup>
-      <ResolvedFileToPublish Include="$(TargetDir)App.xbf;$(TargetDir)$(AssemblyName).pri" Exclude="@(ResolvedFileToPublish)">
-        <RelativePath>%(Filename)%(Extension)</RelativePath>
+      <ResolvedFileToPublish Include="$(TargetDir)App.xbf" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>App.xbf</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+      <ResolvedFileToPublish Include="$(TargetDir)$(AssemblyName).pri" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>$(AssemblyName).pri</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>
