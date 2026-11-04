@@ -1,0 +1,17 @@
+{
+  "runUrl": "https://github.com/lostfaithxenia/GLauncher/actions/runs/41760007881",
+  "runId": 41760007881,
+  "jobId": 126345208509,
+  "source": "177aa6197b1f9ba5e6c1196165b03ff5a1d399f6",
+  "conclusion": "success",
+  "summary": [
+    "2026-11-04T02:19:57.2737326Z   dotnet-version: 10.0.x",
+    "2026-11-04T02:21:16.9274089Z Build succeeded.",
+    "2026-11-04T02:21:16.9280077Z     0 Warning(s)",
+    "2026-11-04T02:21:16.9280482Z     0 Error(s)",
+    "2026-11-04T02:21:20.9040002Z Passed!  - Failed:     0, Passed:    57, Skipped:     0, Total:    57, Duration: 100 ms - GLauncher.Core.Tests.dll (net10.0)",
+    "2026-11-04T02:21:24.0079002Z Passed!  - Failed:     0, Passed:    14, Skipped:     0, Total:    14, Duration: 1 s - GLauncher.Windows.Tests.dll (net10.0)",
+    "2026-11-04T02:21:56.8293875Z Artifact GLauncher-0.1.0-alpha.1-win-x64.zip successfully finalized. Artifact ID 13289228426",
+    "2026-11-04T02:21:56.8295182Z Artifact GLauncher-0.1.0-alpha.1-win-x64 has been successfully uploaded! Final size is 74365647 bytes. Artifact ID is 13289228426"
+  ]
+}

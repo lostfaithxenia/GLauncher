@@ -1,0 +1,9 @@
+{
+  "sha256": "39103A697163096B1183DE101419986BFD46A5CAE28A9EA2575DBF54C1894921",
+  "bytes": 74620901,
+  "entries": 469,
+  "requiredFilesPresent": true,
+  "appDllHashMatches": true,
+  "source": "177aa6197b1f9ba5e6c1196165b03ff5a1d399f6",
+  "productVersion": "0.1.0-alpha.1+177aa6197b1f9ba5e6c1196165b03ff5a1d399f6"
+}

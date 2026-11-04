@@ -1,0 +1,8 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  GLauncher.Core -> <repo>\src\GLauncher.Core\bin\Release\net10.0\GLauncher.Core.dll
+  GLauncher.Windows -> <repo>\src\GLauncher.Windows\bin\Release\net10.0-windows\GLauncher.Windows.dll
+  GLauncher.Storage.Sqlite -> <repo>\src\GLauncher.Storage.Sqlite\bin\Release\net10.0\GLauncher.Storage.Sqlite.dll
+  GLauncher.App -> <repo>\src\GLauncher.App\bin\Release\net10.0-windows10.0.19041.0\win-x64\GLauncher.dll
+  GLauncher.App -> <workspace>\work\glauncher\alpha-publish\alpha-1\
+Portable app: <workspace>\work\glauncher\alpha-publish\alpha-1

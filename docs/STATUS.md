@@ -36,6 +36,10 @@ Feature changes use PRs. Neither assistant merges its own work. Initial document
 - Physical-controller / real-game coverage for GLauncher.
 - Rendering-spike results; those will be recorded with actual measurements.
 
+## Delivered alpha checkpoint
+
+Compiled source 177aa6197b1f9ba5e6c1196165b03ff5a1d399f6 produced the portable 0.1.0-alpha.1 package. Final packaged run: exit 0, 31 checks passed, zero skipped. Local Core/Windows/storage tests: 57+14 passing. Exact-source hosted Windows run 41760007881 also passed build (0 warnings/errors), tests, publish checks and artifact upload. See docs/validation/ALPHA-0.1.md for commands, evidence, ZIP digest, captures, short resource samples and remaining real-game/controller/hotkey coverage. The app is an early local alpha; provider features remain unconnected and both feature PRs remain unmerged.
+
 ## Next handoff
 
 Read PR #6 and docs/ALPHA.md plus its validation report before continuing. Next work is a real-game and physical-controller pass, input/termination edge cases under external store handoffs, visual polish and provider decisions. The emergency one-second Delete hold, unrelated-app guard and unfocused notification proposal remain unresolved product defaults. Preserve data and feature branches; neither assistant merges its own work.

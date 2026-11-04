@@ -1,0 +1,183 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "isolated explicit data directory",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "opening video decodes",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "opening video completed in foreground",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "windowed startup",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "root loaded",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "seven real persisted fixture entries",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "virtualized cards materialized",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "rendered cover frame is 9:16",
+      "passed": true,
+      "facts": {
+        "ActualWidth": 171,
+        "ActualHeight": 304
+      }
+    },
+    {
+      "name": "9:16 survives window resize",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "GridView virtualizes 200 fixture entries",
+      "passed": true,
+      "facts": {
+        "realized": 15,
+        "items": 200
+      }
+    },
+    {
+      "name": "search filters library",
+      "passed": true,
+      "facts": {
+        "query": "Moonvale",
+        "items": 1
+      }
+    },
+    {
+      "name": "F ignored while typing",
+      "passed": true,
+      "facts": {
+        "Typing": true
+      }
+    },
+    {
+      "name": "F enters fullscreen while foreground",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "F returns to window",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "dirty editor blocks Escape-style dismissal",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "game editor saves and imports cover",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "explicit discard preserves saved entry",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "profile editor saves",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "light mode applied and persisted",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "custom MP4 background opened",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "foreground compositor aura starts",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "visible-window resource sample",
+      "actualForeground": true,
+      "workingSetMiB": 342.4921875,
+      "cpuPercentOfMachine": 7.226483980513715
+    },
+    {
+      "name": "real minimized foreground facts",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "F ignored while minimized",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "auras pause while minimized",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "MP4 remains paused while minimized",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "minimized resource sample",
+      "workingSetMiB": 348.33203125,
+      "cpuPercentOfMachine": 0.6489878796228122
+    },
+    {
+      "name": "launcher control resumes on return",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "native fixture launches from app",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "fixture close reports partial semantic coverage",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "tracking dismissal removes gameplay policy",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "exit confirmation opens",
+      "passed": true,
+      "facts": null
+    },
+    {
+      "name": "cancelled exit keeps app open",
+      "passed": true,
+      "facts": null
+    }
+  ],
+  "limits": "Own-app XAML captures can omit compositor-only glow and MediaPlayer surfaces. Fixture processes only; no physical controller, real game, real hotkey press, anti-cheat, notification or download integration was tested."
+}
