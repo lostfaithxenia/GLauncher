@@ -15,6 +15,7 @@ public static class DesktopInput
     public static bool IsForeground(nint window) => GetForegroundWindow() == window && !IsIconic(window);
     public static SessionSnapshot? ForegroundSession(IReadOnlyList<SessionSnapshot> sessions)
     {
+        if (sessions.Count == 0) return null;
         GetWindowThreadProcessId(GetForegroundWindow(), out uint pid);
         if (pid == 0) return null;
         var identity = NativeProcesses.GetIdentity(checked((int)pid));

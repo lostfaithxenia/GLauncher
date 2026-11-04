@@ -55,6 +55,8 @@ internal sealed partial class MainWindow : Window
     private int ticks;
     private SessionId? armedSession;
     private TextBox? librarySearch;
+    private Action? warnUnsavedChanges;
+    private ContentDialog? currentDialog;
     private GridView? libraryGrid;
 
     public MainWindow()
@@ -71,6 +73,7 @@ internal sealed partial class MainWindow : Window
         shell.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         var header = new Grid { ColumnSpacing = 26 };
         header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        header.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); header.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         header.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         var brand = new StackPanel { VerticalAlignment = VerticalAlignment.Center, Spacing = 1 };
@@ -83,6 +86,14 @@ internal sealed partial class MainWindow : Window
         Grid.SetColumn(navigation, 1); header.Children.Add(navigation);
         var profileButton = Button("", -1, EditProfileAsync); profileButton.Content = profileHost; profileButton.Padding = new Thickness(8);
         Grid.SetColumn(profileButton, 2); header.Children.Add(profileButton); shell.Children.Add(header);
+        bool compactHeader = false;
+        root.SizeChanged += (_, _) =>
+        {
+            bool compact = root.ActualWidth < 1050;
+            if (compactHeader == compact) return; compactHeader = compact;
+            Grid.SetRow(navigation, compact ? 1 : 0); Grid.SetColumn(navigation, compact ? 0 : 1); Grid.SetColumnSpan(navigation, compact ? 3 : 1);
+            navigation.Margin = compact ? new Thickness(0, 10, 0, 0) : new Thickness(0);
+        };
         Grid.SetRow(pageHost, 1); shell.Children.Add(pageHost);
         var footer = new Grid(); footer.ColumnDefinitions.Add(new ColumnDefinition()); footer.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         footer.Children.Add(status); controllerStatus.HorizontalAlignment = HorizontalAlignment.Right; Grid.SetColumn(controllerStatus, 1); footer.Children.Add(controllerStatus);
@@ -103,6 +114,7 @@ internal sealed partial class MainWindow : Window
         AppWindow.Closing += async (_, e) =>
         {
             if (allowClose) return; e.Cancel = true;
+            warnUnsavedChanges?.Invoke();
             if (!showingDialog) await GuardAsync(ConfirmExitAsync);
         };
         Closed += (_, _) =>
@@ -131,7 +143,8 @@ internal sealed partial class MainWindow : Window
     private async Task InitializeAsync()
     {
         Program.Trace("Reading settings");
-        settings = await store.GetPreferenceAsync<UserSettings>("settings") ?? new();
+        store.Diagnostic = Program.Option("--smoke-test") is null ? null : Program.Trace;
+        settings = await Task.Run(() => store.GetPreferenceAsync<UserSettings>("settings")) ?? new();
         Program.Trace("Reading library");
         library = await store.GetAllAsync(default); Program.Trace("Applying settings"); ApplySettings(); Program.Trace("Building Recommended"); ShowRecommended(); Program.Trace("Starting timer"); timer.Start();
         if (settings.IntroEnabled && !Program.Arguments.Contains("--skip-intro")) StartIntro();
@@ -145,15 +158,15 @@ internal sealed partial class MainWindow : Window
         status.Foreground = settings.LightMode ? Visuals.Brush(76, 66, 100) : Visuals.Brush(185, 177, 206);
         controllerStatus.Foreground = status.Foreground;
         profileHost.Children.Clear();
-        var avatar = new Border { Width = 68, Height = 68, CornerRadius = new CornerRadius(24), BorderThickness = new Thickness(2), BorderBrush = Visuals.Brush(194, 153, 255),
-            Background = Visuals.Brush(46, 32, 74), Child = settings.ProfilePicture is { } p && File.Exists(p) ? Visuals.Picture(p, 160) : Visuals.Icon(11, 64) };
+        var avatar = new Border { Width = 80, Height = 80, CornerRadius = new CornerRadius(26), BorderThickness = new Thickness(2), BorderBrush = Visuals.Brush(194, 153, 255),
+            Background = Visuals.Brush(46, 32, 74), Child = settings.ProfilePicture is { } p && File.Exists(p) ? Visuals.Picture(p, 160) : Visuals.Icon(11, 76) };
         profileHost.Children.Add(avatar);
         var identity = new StackPanel { Spacing = 3, VerticalAlignment = VerticalAlignment.Center, MaxWidth = 170 };
         identity.Children.Add(Text(settings.ProfileName, 20, true));
         var badges = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 5 };
         foreach (var role in settings.Roles.Take(2))
         {
-            var color = ParseColor(role.Color);
+            var color = TextColor(ParseColor(role.Color), settings.LightMode);
             badges.Children.Add(new Border { Background = new SolidColorBrush(Color.FromArgb(35, color.R, color.G, color.B)), CornerRadius = new CornerRadius(6), Padding = new Thickness(7, 2, 7, 2),
                 Child = new TextBlock { Text = role.Name, FontSize = 10, Foreground = new SolidColorBrush(color) } });
         }
@@ -167,6 +180,7 @@ internal sealed partial class MainWindow : Window
         try { return Color.FromArgb(255, Convert.ToByte(value.Substring(1, 2), 16), Convert.ToByte(value.Substring(3, 2), 16), Convert.ToByte(value.Substring(5, 2), 16)); }
         catch (Exception error) when (error is ArgumentException or FormatException or OverflowException) { return Visuals.Color(201, 167, 255); }
     }
+    private static Color TextColor(Color color, bool light) => light ? Color.FromArgb(255, (byte)(color.R * .52), (byte)(color.G * .52), (byte)(color.B * .52)) : color;
 
     private void SetBackground()
     {
@@ -253,29 +267,29 @@ internal sealed partial class MainWindow : Window
         {
             if (libraryGrid is null) return;
             ClearCards(); libraryGrid.ItemsSource = library.Where(g => g.Title.Contains(search.Text, StringComparison.OrdinalIgnoreCase) &&
-                (platform.SelectedIndex == 0 || (int)g.Platform == platform.SelectedIndex - 1)).Select(g => new CardViewModel(g)).ToArray();
+                (platform.SelectedIndex == 0 || (int)g.Platform == platform.SelectedIndex - 1)).Select(g => new CardViewModel(g, settings.LightMode)).ToArray();
         }
         search.TextChanged += (_, _) => Filter(); platform.SelectionChanged += (_, _) => Filter();
     }
 
-    private sealed record CardViewModel(GameEntry Game)
+    private sealed record CardViewModel(GameEntry Game, bool Light = false)
     {
         public string Title => Game.Title;
         public string Platform => Visuals.Platform(Game.Platform);
-        public SolidColorBrush PlatformBrush => new(Visuals.PlatformColor(Game.Platform));
+        public SolidColorBrush PlatformBrush => new(TextColor(Visuals.PlatformColor(Game.Platform), Light));
         public BitmapImage CoverSource => new(new Uri(Game.CoverPath is { } cover && File.Exists(cover) ? cover : Visuals.Asset("energy-clouds.png"))) { DecodePixelWidth = 342 };
     }
     private sealed record CardVisual(SelectorItem Item, EnergyAura Aura, Grid Root);
     private GridView CreateLibraryGrid(IReadOnlyList<GameEntry> games)
     {
         var grid = new GridView { SelectionMode = ListViewSelectionMode.None, IsItemClickEnabled = true, Margin = new Thickness(-5, 4, -5, 0),
-            ItemsSource = games.Select(g => new CardViewModel(g)).ToArray(), HorizontalAlignment = HorizontalAlignment.Stretch };
+            ItemsSource = games.Select(g => new CardViewModel(g, settings.LightMode)).ToArray(), HorizontalAlignment = HorizontalAlignment.Stretch };
         grid.ItemTemplate = (DataTemplate)XamlReader.Load("""
             <DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
               <Grid Width="214" Height="382" Padding="0,14,0,0" Background="Transparent">
                 <Grid x:Name="AuraHost" Width="220" Height="368" HorizontalAlignment="Center" VerticalAlignment="Top" IsHitTestVisible="False"/>
                 <StackPanel Spacing="6">
-                  <Border Width="171" Height="304" CornerRadius="16" BorderThickness="1.5" BorderBrush="{Binding PlatformBrush}" Background="#221B34">
+                  <Border x:Name="CoverFrame" Width="171" Height="304" CornerRadius="16" BorderThickness="1.5" BorderBrush="{Binding PlatformBrush}" Background="#221B34">
                     <Image Source="{Binding CoverSource}" Stretch="UniformToFill"/>
                   </Border>
                   <TextBlock Text="{Binding Title}" FontSize="15" FontWeight="SemiBold" Margin="22,3,12,0" MaxLines="1" TextTrimming="CharacterEllipsis"/>
@@ -328,7 +342,7 @@ internal sealed partial class MainWindow : Window
         details.Children.Add(new Border { Width = 270, Height = 480, VerticalAlignment = VerticalAlignment.Top, CornerRadius = new CornerRadius(22), BorderThickness = new Thickness(2), BorderBrush = new SolidColorBrush(Visuals.PlatformColor(game.Platform)),
             Child = Visuals.Picture(game.CoverPath is { } cover && File.Exists(cover) ? cover : Visuals.Asset("energy-clouds.png"), 600) });
         var info = new StackPanel { Spacing = 18, MaxWidth = 640, HorizontalAlignment = HorizontalAlignment.Left };
-        info.Children.Add(new TextBlock { Text = Visuals.Platform(game.Platform).ToUpperInvariant(), FontSize = 12, Foreground = new SolidColorBrush(Visuals.PlatformColor(game.Platform)), CharacterSpacing = 100 });
+        info.Children.Add(new TextBlock { Text = Visuals.Platform(game.Platform).ToUpperInvariant(), FontSize = 12, Foreground = new SolidColorBrush(TextColor(Visuals.PlatformColor(game.Platform), settings.LightMode)), CharacterSpacing = 100 });
         info.Children.Add(Text(game.Title, 46, true));
         var more = Button("", 13, () => Task.CompletedTask); AutomationProperties.SetName(more, "Game options");
         var menu = new MenuFlyout();
@@ -414,9 +428,9 @@ internal sealed partial class MainWindow : Window
     private async Task<ContentDialogResult> ShowDialogAsync(ContentDialog dialog)
     {
         if (showingDialog) return ContentDialogResult.None;
-        showingDialog = true;
+        showingDialog = true; currentDialog = dialog;
         try { return await dialog.ShowAsync(); }
-        finally { showingDialog = false; }
+        finally { showingDialog = false; currentDialog = null; }
     }
     private async Task AlertAsync(string title, string message)
     { if (closing || showingDialog) { SetStatus(message); return; } var dialog = Dialog(title); dialog.Content = Text(message, 15); dialog.CloseButtonText = "Okay"; await ShowDialogAsync(dialog); }

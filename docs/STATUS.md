@@ -19,14 +19,18 @@ SYN authorized the initial kit commit and three planning/implementation issues:
 2. Windows game-session tracking and focus/input policy — Codex, dependent on the contracts.
 3. Library shell, 9:16 grid and one platform-cloud aura — Claude, dependent on the agreed shell/contracts.
 
-Codex is performing an isolated rendering spike for video playback/pause and aura behavior. It does not establish a production framework decision or a finished alpha.
+The rendering spike is preserved in draft PR #4. Claude's revision-2 Core is reviewed and compiled in draft PR #5, head 5deb77210a608efcaa788d09ef88dfc902f3726b (57 pure Core tests).
+
+Codex now owns the first-alpha integration of #2 and #3 on `codex/2-first-alpha`, draft PR #6, based on that reviewed Core. This branch adds WinUI UI, Windows native session/input tracking, SQLite persistence, generated assets and portable publishing. Core contracts are unchanged. The original source checkpoint is ccbdf6e25baddc17baab65ccaccfa92eb2b09d5d; subsequent fixes and evidence appear in the same PR.
+
+Windows Release build passes with 0 warnings/errors. Core 57 and Windows native/storage 14 tests pass. Actual app checks have exercised editing/saving/discarding, profiles, 9:16 frames and resize, 200-item virtualization, theme persistence, MP4 decoding/pause, focus-gated fullscreen and controlled process launch. See the alpha validation report for exact run, skips, measured resource conditions and packaged-build status. A test harness or source checkpoint alone is not a delivery claim.
 
 Feature changes use PRs. Neither assistant merges its own work. Initial documentation publication is the specifically authorized setup step.
 
 ## Not yet established
 
-- A production framework or final Core contracts.
-- A production application, installer or configured CI.
+- An independently reviewed/merged alpha. The current distribution is a portable alpha, not a signed installer.
+- Hosted CI results must be checked separately; a Windows workflow is included, not claimed to have passed merely because it exists.
 - AI/metadata providers, online presence or universal achievement integration.
 - Verified download connectors.
 - Physical-controller / real-game coverage for GLauncher.
@@ -34,4 +38,4 @@ Feature changes use PRs. Neither assistant merges its own work. Initial document
 
 ## Next handoff
 
-Claude should read the design image separately from the text prompt and provide reviewable ADR/Core draft files through SYN. Codex publishes and compile-checks them with attribution before dependent feature work.
+Read PR #6 and docs/ALPHA.md plus its validation report before continuing. Next work is a real-game and physical-controller pass, input/termination edge cases under external store handoffs, visual polish and provider decisions. The emergency one-second Delete hold, unrelated-app guard and unfocused notification proposal remain unresolved product defaults. Preserve data and feature branches; neither assistant merges its own work.

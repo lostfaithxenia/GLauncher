@@ -12,6 +12,7 @@ public sealed class SqliteLibraryStore : IGameLibraryStore
     private readonly string connectionString;
     private readonly SemaphoreSlim initialization = new(1);
     private bool initialized;
+    public Action<string>? Diagnostic { get; set; }
     public SqliteLibraryStore(string databasePath)
     {
         string path = Path.GetFullPath(databasePath);
@@ -21,10 +22,13 @@ public sealed class SqliteLibraryStore : IGameLibraryStore
 
     private async Task<SqliteConnection> OpenAsync(CancellationToken token)
     {
+        Diagnostic?.Invoke("SQLite: constructing connection");
         var connection = new SqliteConnection(connectionString);
+        Diagnostic?.Invoke("SQLite: connection constructed");
         try
         {
             await connection.OpenAsync(token).ConfigureAwait(false);
+            Diagnostic?.Invoke("SQLite: connection open");
             await initialization.WaitAsync(token).ConfigureAwait(false);
             try
             {
@@ -41,6 +45,7 @@ public sealed class SqliteLibraryStore : IGameLibraryStore
                         PRAGMA user_version=1;
                         """;
                     await command.ExecuteNonQueryAsync(token).ConfigureAwait(false);
+                    Diagnostic?.Invoke("SQLite: schema ready");
                     initialized = true;
                 }
             }

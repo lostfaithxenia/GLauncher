@@ -53,6 +53,7 @@ internal sealed partial class MainWindow
         fields.Children.Add(description); fields.Children.Add(error); dialog.Content = Scroll(fields);
         string Draft() => string.Join('\n', title.Text, platform.SelectedIndex, executable.Text, arguments.Text, working.Text, cover.Text, description.Text);
         string initial = Draft(); GameEntry? saved = null;
+        warnUnsavedChanges = () => { if (Draft() != initial) { error.Message = "Save your game or choose Discard changes before exiting."; error.IsOpen = true; } };
         dialog.Closing += (_, args) =>
         {
             if (args.Result == ContentDialogResult.None && Draft() != initial)
@@ -75,7 +76,7 @@ internal sealed partial class MainWindow
             catch (Exception exception) { args.Cancel = true; saved = null; error.Message = exception.Message; error.IsOpen = true; }
             finally { deferral.Complete(); }
         };
-        await ShowDialogAsync(dialog);
+        try { await ShowDialogAsync(dialog); } finally { warnUnsavedChanges = null; }
         if (saved is not null) { library = await store.GetAllAsync(default); ShowGame(saved); SetStatus("Game saved."); }
     }
 
@@ -98,6 +99,7 @@ internal sealed partial class MainWindow
         stack.Children.Add(name); stack.Children.Add(picture); stack.Children.Add(Button("Choose picture", 11, async () => { if (await PickFileAsync(".png", ".jpg", ".jpeg") is { } p) picture.Text = p; }));
         stack.Children.Add(roles); stack.Children.Add(Text("Roles decorate your local profile. They do not grant account permissions.", 12)); stack.Children.Add(error); dialog.Content = stack;
         string Initial() => string.Join('\n', name.Text, picture.Text, roles.Text); string initial = Initial();
+        warnUnsavedChanges = () => { if (Initial() != initial) { error.Message = "Save your profile or choose Discard changes before exiting."; error.IsOpen = true; } };
         dialog.Closing += (_, args) => { if (args.Result == ContentDialogResult.None && Initial() != initial) { args.Cancel = true; error.Message = "Save your profile or choose Discard changes before leaving."; error.IsOpen = true; } };
         dialog.PrimaryButtonClick += async (_, args) =>
         {
@@ -117,7 +119,8 @@ internal sealed partial class MainWindow
             catch (Exception exception) { args.Cancel = true; error.Message = exception.Message; error.IsOpen = true; }
             finally { deferral.Complete(); }
         };
-        if (await ShowDialogAsync(dialog) == ContentDialogResult.Primary) ApplySettings();
+        try { if (await ShowDialogAsync(dialog) == ContentDialogResult.Primary) ApplySettings(); }
+        finally { warnUnsavedChanges = null; }
     }
 
     private async Task SaveSettingsAsync(UserSettings updated)

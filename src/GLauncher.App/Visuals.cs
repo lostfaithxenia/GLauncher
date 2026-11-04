@@ -24,10 +24,9 @@ internal static class Visuals
     public static FrameworkElement Icon(int index, double size = 28)
     {
         atlas ??= new BitmapImage(new Uri(Asset("icons.png")));
-        var clip = new Grid { Width = size, Height = size, Clip = new RectangleGeometry { Rect = new global::Windows.Foundation.Rect(0, 0, size, size) } };
-        clip.Children.Add(new Image { Source = atlas, Width = size * 4, Height = size * 4, Stretch = Stretch.Fill,
-            HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top,
-            RenderTransform = new TranslateTransform { X = -(index % 4) * size, Y = -(index / 4) * size } });
+        var clip = new Canvas { Width = size, Height = size, Clip = new RectangleGeometry { Rect = new global::Windows.Foundation.Rect(0, 0, size, size) } };
+        var sprite = new Image { Source = atlas, Width = size * 4, Height = size * 4, Stretch = Stretch.Fill };
+        Canvas.SetLeft(sprite, -(index % 4) * size); Canvas.SetTop(sprite, -(index / 4) * size); clip.Children.Add(sprite);
         return clip;
     }
     public static Image Picture(string path, int decodeWidth = 400)

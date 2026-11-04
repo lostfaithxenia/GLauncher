@@ -138,7 +138,8 @@ internal static class NativeProcesses
     internal static bool TryTerminate(ProcessIdentity identity, JobHandle? job, ProcessIdentity root, out bool stale)
     {
         using var process = OpenProcess(Query | Synchronize | Terminate, false, (uint)identity.ProcessId);
-        stale = process.IsInvalid || Identity(process, identity.ProcessId) != identity || WaitForSingleObject(process, 0) != 258;
+        if (process.IsInvalid) { stale = Marshal.GetLastWin32Error() is 87 or 1168; return false; }
+        stale = Identity(process, identity.ProcessId) != identity || WaitForSingleObject(process, 0) != 258;
         if (stale) return false;
         bool owned = job is not null
             ? IsProcessInJob(process, job, out bool member) && member : identity == root;
